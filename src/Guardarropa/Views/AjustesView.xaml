@@ -1,0 +1,265 @@
+<UserControl x:Class="Guardarropa.Views.AjustesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="#1a1a2e">
+        <Border Background="#16213e" CornerRadius="12" Padding="30"
+                Margin="30" MaxWidth="700">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" Opacity="0.3" ShadowDepth="5"/>
+            </Border.Effect>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,20">
+                        <Button DockPanel.Dock="Right" Content="Cerrar" Command="{Binding CerrarCommand}"
+                                Background="Transparent" Foreground="#a8a8b3" BorderThickness="0"
+                                Cursor="Hand" FontSize="14"/>
+                        <TextBlock Text="AJUSTES" FontSize="24" FontWeight="Bold"
+                                   Foreground="#e94560"/>
+                    </DockPanel>
+
+                    <!-- Precio -->
+                    <TextBlock Text="PRECIO POR PRENDA" FontSize="13" FontWeight="Bold"
+                               Foreground="#a8a8b3" Margin="0,0,0,8"/>
+                    <TextBox Text="{Binding PrecioPorPrenda, UpdateSourceTrigger=PropertyChanged}"
+                             FontSize="16" Padding="10" Background="#0f3460" Foreground="White"
+                             BorderBrush="#333" BorderThickness="1" Margin="0,0,0,20"/>
+
+                    <!-- Empresas -->
+                    <TextBlock Text="EMPRESAS" FontSize="13" FontWeight="Bold"
+                               Foreground="#a8a8b3" Margin="0,0,0,8"/>
+                    <ListBox ItemsSource="{Binding Empresas}"
+                             SelectedItem="{Binding EmpresaSeleccionada}"
+                             DisplayMemberPath="Nombre"
+                             Background="#0f3460" Foreground="White"
+                             BorderBrush="#333" BorderThickness="1"
+                             MaxHeight="120" Margin="0,0,0,8">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="8,5"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <Grid Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding NuevaEmpresa, UpdateSourceTrigger=PropertyChanged}"
+                                 FontSize="14" Padding="8" Background="#0f3460" Foreground="White"
+                                 BorderBrush="#333" BorderThickness="1" Margin="0,0,8,0"/>
+                        <Button Grid.Column="1" Content="Agregar" Command="{Binding AgregarEmpresaCommand}"
+                                Background="#4ecca3" Foreground="White" BorderThickness="0"
+                                Cursor="Hand" Padding="15,8" FontSize="13">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                    <Button Content="Eliminar seleccionada" Command="{Binding EliminarEmpresaCommand}"
+                            Background="#ff6b6b" Foreground="White" BorderThickness="0"
+                            Cursor="Hand" Padding="10,6" FontSize="12"
+                            HorizontalAlignment="Left" Margin="0,0,0,20">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Impresora -->
+                    <TextBlock Text="IMPRESORA" FontSize="13" FontWeight="Bold"
+                               Foreground="#a8a8b3" Margin="0,0,0,8"/>
+                    <ComboBox ItemsSource="{Binding ImpresorasDisponibles}"
+                              SelectedItem="{Binding NombreImpresora}"
+                              FontSize="14" Padding="8" Background="#0f3460" Foreground="White"
+                              BorderBrush="#333" BorderThickness="1" Margin="0,0,0,10"/>
+
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                            <TextBlock Text="Ancho (mm)" Foreground="#a8a8b3" FontSize="11"/>
+                            <TextBox Text="{Binding AnchoTicketMm}" Padding="8" Background="#0f3460"
+                                     Foreground="White" BorderBrush="#333" BorderThickness="1"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                            <TextBlock Text="Alto (mm)" Foreground="#a8a8b3" FontSize="11"/>
+                            <TextBox Text="{Binding AltoTicketMm}" Padding="8" Background="#0f3460"
+                                     Foreground="White" BorderBrush="#333" BorderThickness="1"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="Margenes (mm)" Foreground="#a8a8b3" FontSize="11" Margin="0,0,0,5"/>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,3,0">
+                            <TextBlock Text="Izq" Foreground="#666" FontSize="10"/>
+                            <TextBox Text="{Binding MargenIzquierdoMm}" Padding="6" Background="#0f3460"
+                                     Foreground="White" BorderBrush="#333" BorderThickness="1"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="3,0,3,0">
+                            <TextBlock Text="Der" Foreground="#666" FontSize="10"/>
+                            <TextBox Text="{Binding MargenDerechoMm}" Padding="6" Background="#0f3460"
+                                     Foreground="White" BorderBrush="#333" BorderThickness="1"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="3,0,3,0">
+                            <TextBlock Text="Sup" Foreground="#666" FontSize="10"/>
+                            <TextBox Text="{Binding MargenSuperiorMm}" Padding="6" Background="#0f3460"
+                                     Foreground="White" BorderBrush="#333" BorderThickness="1"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3" Margin="3,0,0,0">
+                            <TextBlock Text="Inf" Foreground="#666" FontSize="10"/>
+                            <TextBox Text="{Binding MargenInferiorMm}" Padding="6" Background="#0f3460"
+                                     Foreground="White" BorderBrush="#333" BorderThickness="1"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="Tamano de textos (pt)" Foreground="#a8a8b3" FontSize="11" Margin="0,0,0,5"/>
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,3,0">
+                            <TextBlock Text="Normal" Foreground="#666" FontSize="10"/>
+                            <TextBox Text="{Binding TamanoTextoNormal}" Padding="6" Background="#0f3460"
+                                     Foreground="White" BorderBrush="#333" BorderThickness="1"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="3,0,3,0">
+                            <TextBlock Text="Titulo" Foreground="#666" FontSize="10"/>
+                            <TextBox Text="{Binding TamanoTextoTitulo}" Padding="6" Background="#0f3460"
+                                     Foreground="White" BorderBrush="#333" BorderThickness="1"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="3,0,0,0">
+                            <TextBlock Text="Grande" Foreground="#666" FontSize="10"/>
+                            <TextBox Text="{Binding TamanoTextoGrande}" Padding="6" Background="#0f3460"
+                                     Foreground="White" BorderBrush="#333" BorderThickness="1"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Button Content="GUARDAR CONFIGURACION" Command="{Binding GuardarConfiguracionCommand}"
+                            FontSize="14" FontWeight="Bold" Padding="15,10"
+                            Background="#4ecca3" Foreground="White" BorderThickness="0"
+                            Cursor="Hand" HorizontalAlignment="Stretch" Margin="0,0,0,25">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Contrasena Z -->
+                    <TextBlock Text="CONTRASENA Z" FontSize="13" FontWeight="Bold"
+                               Foreground="#a8a8b3" Margin="0,0,0,8"/>
+                    <Grid Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding ContrasenaZGenerada, Mode=OneWay}"
+                                 IsReadOnly="True" FontSize="18" FontWeight="Bold" Padding="10"
+                                 Background="#0f3460" Foreground="#e94560"
+                                 BorderBrush="#333" BorderThickness="1" Margin="0,0,8,0"/>
+                        <Button Grid.Column="1" Content="Generar" Command="{Binding GenerarContrasenaZCommand}"
+                                Background="#e94560" Foreground="White" BorderThickness="0"
+                                Cursor="Hand" Padding="15,10" FontSize="13">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                    <TextBlock Text="Esta contrasena se necesita para realizar el cierre Z"
+                               Foreground="#666" FontSize="11" Margin="0,0,0,20"/>
+
+                    <!-- Cambiar contrasena maestra -->
+                    <TextBlock Text="CAMBIAR CONTRASENA MAESTRA" FontSize="13" FontWeight="Bold"
+                               Foreground="#a8a8b3" Margin="0,0,0,8"/>
+                    <TextBlock Text="Contrasena actual:" Foreground="#a8a8b3" FontSize="11" Margin="0,0,0,3"/>
+                    <PasswordBox x:Name="TxtContrasenaActual" Padding="8" Background="#0f3460" Foreground="White"
+                                 BorderBrush="#333" BorderThickness="1" Margin="0,0,0,8"
+                                 PasswordChanged="TxtContrasenaActual_Changed"/>
+                    <TextBlock Text="Nueva contrasena:" Foreground="#a8a8b3" FontSize="11" Margin="0,0,0,3"/>
+                    <PasswordBox x:Name="TxtNuevaContrasena" Padding="8" Background="#0f3460" Foreground="White"
+                                 BorderBrush="#333" BorderThickness="1" Margin="0,0,0,8"
+                                 PasswordChanged="TxtNuevaContrasena_Changed"/>
+                    <TextBlock Text="Confirmar nueva contrasena:" Foreground="#a8a8b3" FontSize="11" Margin="0,0,0,3"/>
+                    <PasswordBox x:Name="TxtConfirmarNueva" Padding="8" Background="#0f3460" Foreground="White"
+                                 BorderBrush="#333" BorderThickness="1" Margin="0,0,0,10"
+                                 PasswordChanged="TxtConfirmarNueva_Changed"/>
+                    <Button Content="Cambiar contrasena" Command="{Binding CambiarContrasenaCommand}"
+                            Background="#0f3460" Foreground="White" BorderThickness="1" BorderBrush="#e94560"
+                            Cursor="Hand" Padding="15,8" FontSize="13"
+                            HorizontalAlignment="Left" Margin="0,0,0,20">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="4" Padding="{TemplateBinding Padding}"
+                                        BorderBrush="#e94560" BorderThickness="1">
+                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Historico -->
+                    <Button Content="Ver historico de cierres Z" Command="{Binding AbrirHistoricoCommand}"
+                            Background="#0f3460" Foreground="White" BorderThickness="1" BorderBrush="#4ecca3"
+                            Cursor="Hand" Padding="15,10" FontSize="14"
+                            HorizontalAlignment="Stretch" Margin="0,0,0,15">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="6" Padding="{TemplateBinding Padding}"
+                                        BorderBrush="#4ecca3" BorderThickness="1">
+                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Mensaje -->
+                    <TextBlock Text="{Binding Mensaje}" FontSize="12"
+                               HorizontalAlignment="Center" Margin="0,5,0,0"
+                               TextWrapping="Wrap"
+                               Visibility="{Binding Mensaje, Converter={StaticResource StringToVisibility}}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="#4ecca3"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HayError}" Value="True">
+                                        <Setter Property="Foreground" Value="#ff6b6b"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>
