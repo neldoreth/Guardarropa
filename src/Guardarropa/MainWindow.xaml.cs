@@ -17,6 +17,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         _dbServicio.InicializarBaseDatos();
+        CargarTema();
         Iniciar();
     }
 
@@ -106,6 +107,15 @@ public partial class MainWindow : Window
         );
         var view = new HistoricoZView { DataContext = vm };
         ContenidoPrincipal.Content = view;
+    }
+
+    private void CargarTema()
+    {
+        if (!_dbServicio.EsPrimerInicio())
+        {
+            var config = _dbServicio.ObtenerConfiguracion();
+            App.CambiarTema(config.TemaOscuro);
+        }
     }
 
     private void PedirContrasenaYAbrir(Action onAutenticado)

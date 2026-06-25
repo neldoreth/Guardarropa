@@ -12,6 +12,28 @@ public partial class AjustesViewModel : ObservableObject
     private readonly Action _onCerrar;
     private readonly Action _onAbrirHistorico;
 
+    // --- Tema ---
+    [ObservableProperty] private bool _temaOscuro;
+
+    public bool TemaClaro
+    {
+        get => !TemaOscuro;
+        set
+        {
+            if (value != !TemaOscuro)
+            {
+                TemaOscuro = !value;
+                OnPropertyChanged(nameof(TemaClaro));
+            }
+        }
+    }
+
+    partial void OnTemaOscuroChanged(bool value)
+    {
+        OnPropertyChanged(nameof(TemaClaro));
+        App.CambiarTema(value);
+    }
+
     // --- Configuracion general ---
     [ObservableProperty] private decimal _precioPorPrenda;
     [ObservableProperty] private string _nombreImpresora = string.Empty;
@@ -39,7 +61,7 @@ public partial class AjustesViewModel : ObservableObject
     [ObservableProperty] private string _confirmarNuevaContrasena = string.Empty;
 
     // --- Contrasena Z ---
-    [ObservableProperty] private string _contrasenaZGenerada = string.Empty;
+    [ObservableProperty] private string _contrasenaZ = string.Empty;
 
     // --- Mensajes ---
     [ObservableProperty] private string _mensaje = string.Empty;
@@ -69,7 +91,8 @@ public partial class AjustesViewModel : ObservableObject
         TamanoTextoNormal = config.TamanoTextoNormal;
         TamanoTextoGrande = config.TamanoTextoGrande;
         TamanoTextoTitulo = config.TamanoTextoTitulo;
-        ContrasenaZGenerada = config.ContrasenaZ;
+        ContrasenaZ = config.ContrasenaZ;
+        TemaOscuro = config.TemaOscuro;
     }
 
     private void CargarEmpresas()
@@ -97,6 +120,8 @@ public partial class AjustesViewModel : ObservableObject
         config.TamanoTextoNormal = TamanoTextoNormal;
         config.TamanoTextoGrande = TamanoTextoGrande;
         config.TamanoTextoTitulo = TamanoTextoTitulo;
+        config.TemaOscuro = TemaOscuro;
+        config.ContrasenaZ = ContrasenaZ;
         _dbServicio.GuardarConfiguracion(config);
         Mensaje = "Configuracion guardada correctamente";
         HayError = false;
@@ -159,14 +184,6 @@ public partial class AjustesViewModel : ObservableObject
         NuevaContrasena = string.Empty;
         ConfirmarNuevaContrasena = string.Empty;
         Mensaje = "Contrasena cambiada correctamente";
-        HayError = false;
-    }
-
-    [RelayCommand]
-    private void GenerarContrasenaZ()
-    {
-        ContrasenaZGenerada = _dbServicio.GenerarContrasenaZ();
-        Mensaje = $"Contrasena Z generada: {ContrasenaZGenerada}";
         HayError = false;
     }
 

@@ -1,0 +1,15 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="FondoPrincipal" Color="#1a1a2e"/>
+    <SolidColorBrush x:Key="FondoTarjeta" Color="#16213e"/>
+    <SolidColorBrush x:Key="FondoInput" Color="#0f3460"/>
+    <SolidColorBrush x:Key="TextoPrincipal" Color="White"/>
+    <SolidColorBrush x:Key="TextoSecundario" Color="#a8a8b3"/>
+    <SolidColorBrush x:Key="TextoTerciario" Color="#666666"/>
+    <SolidColorBrush x:Key="BordeCampo" Color="#333333"/>
+    <SolidColorBrush x:Key="ColorAccento" Color="#e94560"/>
+    <SolidColorBrush x:Key="ColorExito" Color="#4ecca3"/>
+    <SolidColorBrush x:Key="ColorError" Color="#ff6b6b"/>
+    <SolidColorBrush x:Key="FondoBarraSuperior" Color="#16213e"/>
+    <SolidColorBrush x:Key="FondoPrecio" Color="#0f3460"/>
+</ResourceDictionary>

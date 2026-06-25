@@ -1,35 +1,38 @@
 <UserControl x:Class="Guardarropa.Views.HistoricoZView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid Background="#1a1a2e">
-        <Border Background="#16213e" CornerRadius="12" Padding="30"
-                Margin="30" MaxWidth="800">
+    <Grid Background="{DynamicResource FondoPrincipal}">
+        <Border Background="{DynamicResource FondoTarjeta}" CornerRadius="12" Padding="30"
+                Margin="30" MaxWidth="850">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" Opacity="0.3" ShadowDepth="5"/>
             </Border.Effect>
             <StackPanel>
                 <DockPanel Margin="0,0,0,20">
                     <Button DockPanel.Dock="Right" Content="Volver" Command="{Binding CerrarCommand}"
-                            Background="Transparent" Foreground="#a8a8b3" BorderThickness="0"
+                            Background="Transparent" Foreground="{DynamicResource TextoSecundario}" BorderThickness="0"
                             Cursor="Hand" FontSize="14"/>
                     <TextBlock Text="HISTORICO DE CIERRES Z" FontSize="22" FontWeight="Bold"
-                               Foreground="#e94560"/>
+                               Foreground="{DynamicResource ColorAccento}"/>
                 </DockPanel>
 
                 <DataGrid ItemsSource="{Binding Cierres}" AutoGenerateColumns="False"
-                          IsReadOnly="True" Background="#0f3460" Foreground="White"
-                          BorderBrush="#333" BorderThickness="1" GridLinesVisibility="Horizontal"
-                          HorizontalGridLinesBrush="#333" RowBackground="#0f3460"
-                          AlternatingRowBackground="#162447"
+                          IsReadOnly="True" Background="{DynamicResource FondoInput}"
+                          Foreground="{DynamicResource TextoPrincipal}"
+                          BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"
+                          GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="{DynamicResource BordeCampo}"
+                          RowBackground="{DynamicResource FondoInput}"
+                          AlternatingRowBackground="{DynamicResource FondoTarjeta}"
                           HeadersVisibility="Column" MaxHeight="400"
                           Margin="0,0,0,20">
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="#1a1a2e"/>
-                            <Setter Property="Foreground" Value="#a8a8b3"/>
+                            <Setter Property="Background" Value="{DynamicResource FondoPrincipal}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource TextoSecundario}"/>
                             <Setter Property="Padding" Value="10,8"/>
                             <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="BorderBrush" Value="#333"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource BordeCampo}"/>
                             <Setter Property="BorderThickness" Value="0,0,0,1"/>
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
@@ -37,19 +40,19 @@
                         <Style TargetType="DataGridCell">
                             <Setter Property="Padding" Value="10,6"/>
                             <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Foreground" Value="{DynamicResource TextoPrincipal}"/>
                         </Style>
                     </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat='dd/MM/yyyy HH:mm'}" Width="*"/>
                         <DataGridTextColumn Header="Empresa" Binding="{Binding Empresa.Nombre}" Width="*"/>
-                        <DataGridTextColumn Header="Tickets" Binding="{Binding TotalTickets}" Width="80"/>
+                        <DataGridTextColumn Header="Perchas" Binding="{Binding TotalTickets}" Width="80"/>
                         <DataGridTextColumn Header="Prendas" Binding="{Binding TotalPrendas}" Width="80"/>
                         <DataGridTextColumn Header="Recaudado" Binding="{Binding TotalRecaudado, StringFormat='{}{0:C2}'}" Width="120"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Border Background="#0f3460" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                <Border Background="{DynamicResource FondoInput}" CornerRadius="8" Padding="15" Margin="0,0,0,10">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -57,21 +60,21 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                            <TextBlock Text="TOTAL TICKETS" Foreground="#a8a8b3" FontSize="10"
+                            <TextBlock Text="TOTAL PERCHAS" Foreground="{DynamicResource TextoSecundario}" FontSize="10"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="{Binding TotalTicketsGeneral}" Foreground="White"
+                            <TextBlock Text="{Binding TotalTicketsGeneral}" Foreground="{DynamicResource TextoPrincipal}"
                                        FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                            <TextBlock Text="TOTAL PRENDAS" Foreground="#a8a8b3" FontSize="10"
+                            <TextBlock Text="TOTAL PRENDAS" Foreground="{DynamicResource TextoSecundario}" FontSize="10"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="{Binding TotalPrendasGeneral}" Foreground="White"
+                            <TextBlock Text="{Binding TotalPrendasGeneral}" Foreground="{DynamicResource TextoPrincipal}"
                                        FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2" HorizontalAlignment="Center">
-                            <TextBlock Text="TOTAL RECAUDADO" Foreground="#a8a8b3" FontSize="10"
+                            <TextBlock Text="TOTAL RECAUDADO" Foreground="{DynamicResource TextoSecundario}" FontSize="10"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="{Binding TotalGeneral, StringFormat='{}{0:C2}'}" Foreground="#e94560"
+                            <TextBlock Text="{Binding TotalGeneral, StringFormat='{}{0:C2}'}" Foreground="{DynamicResource ColorAccento}"
                                        FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>

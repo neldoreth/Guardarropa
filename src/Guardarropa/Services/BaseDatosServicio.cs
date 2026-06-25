@@ -71,6 +71,8 @@ public class BaseDatosServicio
             existente.TamanoTextoNormal = config.TamanoTextoNormal;
             existente.TamanoTextoGrande = config.TamanoTextoGrande;
             existente.TamanoTextoTitulo = config.TamanoTextoTitulo;
+            existente.TemaOscuro = config.TemaOscuro;
+            existente.ContrasenaZ = config.ContrasenaZ;
         }
         db.SaveChanges();
     }
@@ -147,13 +149,12 @@ public class BaseDatosServicio
         return (ultimoTicketSinCierre?.NumeroTicket ?? 0) + 1;
     }
 
-    public Ticket CrearTicket(int empresaId, int numeroPrendas, decimal precioPorPrenda)
+    public Ticket CrearTicket(int empresaId, int numeroPrendas, decimal precioPorPrenda, int numeroPercha)
     {
         using var db = new GuardarropaDbContext();
-        var numeroTicket = ObtenerSiguienteNumeroTicket(empresaId);
         var ticket = new Ticket
         {
-            NumeroTicket = numeroTicket,
+            NumeroTicket = numeroPercha,
             NumeroPrendas = numeroPrendas,
             PrecioPorPrenda = precioPorPrenda,
             PrecioTotal = numeroPrendas * precioPorPrenda,

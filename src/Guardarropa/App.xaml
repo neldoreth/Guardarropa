@@ -4,8 +4,13 @@
              xmlns:converters="clr-namespace:Guardarropa.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <converters:StringToVisibilityConverter x:Key="StringToVisibility"/>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
-        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Assets/TemaOscuro.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <converters:StringToVisibilityConverter x:Key="StringToVisibility"/>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+            <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

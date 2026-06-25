@@ -27,7 +27,10 @@ public partial class PrincipalViewModel : ObservableObject
     private decimal _precioTotal;
 
     [ObservableProperty]
-    private int _siguienteNumeroTicket;
+    private int _numeroPercha;
+
+    [ObservableProperty]
+    private string _fechaActual = string.Empty;
 
     [ObservableProperty]
     private string _mensaje = string.Empty;
@@ -48,7 +51,8 @@ public partial class PrincipalViewModel : ObservableObject
         NombreEmpresa = empresa.Nombre;
         var config = _dbServicio.ObtenerConfiguracion();
         PrecioPorPrenda = config.PrecioPorPrenda;
-        SiguienteNumeroTicket = _dbServicio.ObtenerSiguienteNumeroTicket(empresa.Id);
+        NumeroPercha = _dbServicio.ObtenerSiguienteNumeroTicket(empresa.Id);
+        FechaActual = DateTime.Now.ToString("dddd, dd 'de' MMMM 'de' yyyy");
         CalcularPrecio();
     }
 
@@ -73,14 +77,22 @@ public partial class PrincipalViewModel : ObservableObject
             return;
         }
 
+        var config = _dbServicio.ObtenerConfiguracion();
+
+        if (string.IsNullOrWhiteSpace(config.NombreImpresora))
+        {
+            Mensaje = "No hay impresora configurada. Ve a Ajustes > Impresora para seleccionar una.";
+            HayError = true;
+            return;
+        }
+
         try
         {
-            var config = _dbServicio.ObtenerConfiguracion();
-            var ticket = _dbServicio.CrearTicket(_empresa.Id, NumeroPrendas, PrecioPorPrenda);
+            var ticket = _dbServicio.CrearTicket(_empresa.Id, NumeroPrendas, PrecioPorPrenda, NumeroPercha);
             _impresionServicio.ImprimirTicket(ticket, config);
-            SiguienteNumeroTicket = _dbServicio.ObtenerSiguienteNumeroTicket(_empresa.Id);
+            NumeroPercha = _dbServicio.ObtenerSiguienteNumeroTicket(_empresa.Id);
             NumeroPrendas = 1;
-            Mensaje = $"Ticket #{ticket.NumeroTicket} impreso correctamente";
+            Mensaje = $"Percha #{ticket.NumeroTicket} impresa correctamente";
             HayError = false;
         }
         catch (Exception ex)
@@ -91,28 +103,19 @@ public partial class PrincipalViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void VolverSeleccion()
-    {
-        _onVolverSeleccion();
-    }
+    private void VolverSeleccion() => _onVolverSeleccion();
 
     [RelayCommand]
-    private void AbrirAjustes()
-    {
-        _onAbrirAjustes();
-    }
+    private void AbrirAjustes() => _onAbrirAjustes();
 
     [RelayCommand]
-    private void AbrirCierreZ()
-    {
-        _onAbrirCierreZ();
-    }
+    private void AbrirCierreZ() => _onAbrirCierreZ();
 
     public void Refrescar()
     {
         var config = _dbServicio.ObtenerConfiguracion();
         PrecioPorPrenda = config.PrecioPorPrenda;
-        SiguienteNumeroTicket = _dbServicio.ObtenerSiguienteNumeroTicket(_empresa.Id);
+        NumeroPercha = _dbServicio.ObtenerSiguienteNumeroTicket(_empresa.Id);
         CalcularPrecio();
     }
 }

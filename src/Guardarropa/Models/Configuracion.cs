@@ -16,4 +16,5 @@ public class Configuracion
     public int TamanoTextoGrande { get; set; } = 24;
     public int TamanoTextoTitulo { get; set; } = 14;
     public string ContrasenaZ { get; set; } = string.Empty;
+    public bool TemaOscuro { get; set; } = true;
 }
