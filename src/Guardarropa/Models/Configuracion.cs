@@ -17,4 +17,5 @@ public class Configuracion
     public int TamanoTextoTitulo { get; set; } = 14;
     public string ContrasenaZ { get; set; } = string.Empty;
     public bool TemaOscuro { get; set; } = true;
+    public int ContadorTickets { get; set; } = 0;
 }

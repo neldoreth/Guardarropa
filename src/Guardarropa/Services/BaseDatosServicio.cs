@@ -108,20 +108,31 @@ public class BaseDatosServicio
         return db.Empresas.Where(e => e.Activa).OrderBy(e => e.Nombre).ToList();
     }
 
-    public void AgregarEmpresa(string nombre)
+    public void AgregarEmpresa(string nombre, string calle, string numero, string ciudad, string provincia)
     {
         using var db = new GuardarropaDbContext();
-        db.Empresas.Add(new Empresa { Nombre = nombre });
+        db.Empresas.Add(new Empresa
+        {
+            Nombre = nombre,
+            Calle = calle,
+            Numero = numero,
+            Ciudad = ciudad,
+            Provincia = provincia
+        });
         db.SaveChanges();
     }
 
-    public void EditarEmpresa(int id, string nuevoNombre)
+    public void EditarEmpresa(int id, string nombre, string calle, string numero, string ciudad, string provincia)
     {
         using var db = new GuardarropaDbContext();
         var empresa = db.Empresas.Find(id);
         if (empresa != null)
         {
-            empresa.Nombre = nuevoNombre;
+            empresa.Nombre = nombre;
+            empresa.Calle = calle;
+            empresa.Numero = numero;
+            empresa.Ciudad = ciudad;
+            empresa.Provincia = provincia;
             db.SaveChanges();
         }
     }
@@ -139,22 +150,46 @@ public class BaseDatosServicio
 
     // --- Tickets ---
 
-    public int ObtenerSiguienteNumeroTicket(int empresaId)
+    public int ObtenerSiguienteNumeroPercha(int empresaId)
     {
         using var db = new GuardarropaDbContext();
         var ultimoTicketSinCierre = db.Tickets
             .Where(t => t.EmpresaId == empresaId && t.CierreZId == null)
-            .OrderByDescending(t => t.NumeroTicket)
+            .OrderByDescending(t => t.NumeroPercha)
             .FirstOrDefault();
-        return (ultimoTicketSinCierre?.NumeroTicket ?? 0) + 1;
+        return (ultimoTicketSinCierre?.NumeroPercha ?? 0) + 1;
+    }
+
+    public int ObtenerContadorTickets()
+    {
+        using var db = new GuardarropaDbContext();
+        return db.Configuraciones.FirstOrDefault()?.ContadorTickets ?? 0;
+    }
+
+    public void ReiniciarContadorTickets()
+    {
+        using var db = new GuardarropaDbContext();
+        var config = db.Configuraciones.FirstOrDefault();
+        if (config != null)
+        {
+            config.ContadorTickets = 0;
+            db.SaveChanges();
+        }
     }
 
     public Ticket CrearTicket(int empresaId, int numeroPrendas, decimal precioPorPrenda, int numeroPercha)
     {
         using var db = new GuardarropaDbContext();
+
+        var config = db.Configuraciones.FirstOrDefault();
+        var numeroTicketTotal = (config?.ContadorTickets ?? 0) + 1;
+        if (config != null)
+            config.ContadorTickets = numeroTicketTotal;
+
         var ticket = new Ticket
         {
-            NumeroTicket = numeroPercha,
+            NumeroPercha = numeroPercha,
+            NumeroTicket = numeroTicketTotal,
             NumeroPrendas = numeroPrendas,
             PrecioPorPrenda = precioPorPrenda,
             PrecioTotal = numeroPrendas * precioPorPrenda,

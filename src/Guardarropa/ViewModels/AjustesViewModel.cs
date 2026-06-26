@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Guardarropa.Models;
@@ -53,7 +54,26 @@ public partial class AjustesViewModel : ObservableObject
     // --- Empresas ---
     [ObservableProperty] private ObservableCollection<Empresa> _empresas = new();
     [ObservableProperty] private Empresa? _empresaSeleccionada;
-    [ObservableProperty] private string _nuevaEmpresa = string.Empty;
+    [ObservableProperty] private string _empresaNombre = string.Empty;
+    [ObservableProperty] private string _empresaCalle = string.Empty;
+    [ObservableProperty] private string _empresaNumero = string.Empty;
+    [ObservableProperty] private string _empresaCiudad = string.Empty;
+    [ObservableProperty] private string _empresaProvincia = string.Empty;
+
+    partial void OnEmpresaSeleccionadaChanged(Empresa? value)
+    {
+        if (value != null)
+        {
+            EmpresaNombre = value.Nombre;
+            EmpresaCalle = value.Calle;
+            EmpresaNumero = value.Numero;
+            EmpresaCiudad = value.Ciudad;
+            EmpresaProvincia = value.Provincia;
+        }
+    }
+
+    // --- Contador total de tickets ---
+    [ObservableProperty] private int _contadorTickets;
 
     // --- Contrasena ---
     [ObservableProperty] private string _contrasenaActual = string.Empty;
@@ -93,6 +113,7 @@ public partial class AjustesViewModel : ObservableObject
         TamanoTextoTitulo = config.TamanoTextoTitulo;
         ContrasenaZ = config.ContrasenaZ;
         TemaOscuro = config.TemaOscuro;
+        ContadorTickets = config.ContadorTickets;
     }
 
     private void CargarEmpresas()
@@ -123,23 +144,50 @@ public partial class AjustesViewModel : ObservableObject
         config.TemaOscuro = TemaOscuro;
         config.ContrasenaZ = ContrasenaZ;
         _dbServicio.GuardarConfiguracion(config);
-        Mensaje = "Configuracion guardada correctamente";
-        HayError = false;
+        _onCerrar();
+    }
+
+    private void LimpiarFormularioEmpresa()
+    {
+        EmpresaSeleccionada = null;
+        EmpresaNombre = string.Empty;
+        EmpresaCalle = string.Empty;
+        EmpresaNumero = string.Empty;
+        EmpresaCiudad = string.Empty;
+        EmpresaProvincia = string.Empty;
     }
 
     [RelayCommand]
-    private void AgregarEmpresa()
+    private void NuevaEmpresa()
     {
-        if (string.IsNullOrWhiteSpace(NuevaEmpresa))
+        LimpiarFormularioEmpresa();
+    }
+
+    [RelayCommand]
+    private void GuardarEmpresa()
+    {
+        if (string.IsNullOrWhiteSpace(EmpresaNombre))
         {
             Mensaje = "Introduce un nombre de empresa";
             HayError = true;
             return;
         }
-        _dbServicio.AgregarEmpresa(NuevaEmpresa.Trim());
-        NuevaEmpresa = string.Empty;
+
+        if (EmpresaSeleccionada != null)
+        {
+            _dbServicio.EditarEmpresa(EmpresaSeleccionada.Id, EmpresaNombre.Trim(),
+                EmpresaCalle.Trim(), EmpresaNumero.Trim(), EmpresaCiudad.Trim(), EmpresaProvincia.Trim());
+            Mensaje = "Empresa actualizada";
+        }
+        else
+        {
+            _dbServicio.AgregarEmpresa(EmpresaNombre.Trim(),
+                EmpresaCalle.Trim(), EmpresaNumero.Trim(), EmpresaCiudad.Trim(), EmpresaProvincia.Trim());
+            Mensaje = "Empresa agregada";
+        }
+
+        LimpiarFormularioEmpresa();
         CargarEmpresas();
-        Mensaje = "Empresa agregada";
         HayError = false;
     }
 
@@ -153,8 +201,31 @@ public partial class AjustesViewModel : ObservableObject
             return;
         }
         _dbServicio.EliminarEmpresa(EmpresaSeleccionada.Id);
+        LimpiarFormularioEmpresa();
         CargarEmpresas();
         Mensaje = "Empresa eliminada";
+        HayError = false;
+    }
+
+    [RelayCommand]
+    private void ReiniciarContadorTickets()
+    {
+        var respuesta = MessageBox.Show(
+            "Vas a reiniciar el contador total de tickets a cero.\n\n" +
+            "Esta accion es IRREVERSIBLE: el numero total de tickets emitidos volvera a empezar desde 1 " +
+            "y no se podra recuperar el valor actual.\n\n" +
+            "Ten en cuenta que esto NO afecta al numero de percha (ese se reinicia con el cierre Z).\n\n" +
+            "Estas seguro de que quieres continuar?",
+            "Reiniciar contador de tickets",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (respuesta != MessageBoxResult.Yes)
+            return;
+
+        _dbServicio.ReiniciarContadorTickets();
+        ContadorTickets = 0;
+        Mensaje = "Contador total de tickets reiniciado";
         HayError = false;
     }
 

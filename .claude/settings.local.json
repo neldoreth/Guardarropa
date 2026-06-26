@@ -3,7 +3,8 @@
     "allow": [
       "PowerShell(git *)",
       "PowerShell(winget install *)",
-      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\GitHub CLI\\\\gh.exe\" auth status)"
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\GitHub CLI\\\\gh.exe\" auth status)",
+      "PowerShell(Get-Process *)"
     ]
   }
 }

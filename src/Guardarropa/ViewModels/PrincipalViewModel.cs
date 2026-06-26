@@ -51,7 +51,7 @@ public partial class PrincipalViewModel : ObservableObject
         NombreEmpresa = empresa.Nombre;
         var config = _dbServicio.ObtenerConfiguracion();
         PrecioPorPrenda = config.PrecioPorPrenda;
-        NumeroPercha = _dbServicio.ObtenerSiguienteNumeroTicket(empresa.Id);
+        NumeroPercha = _dbServicio.ObtenerSiguienteNumeroPercha(empresa.Id);
         FechaActual = DateTime.Now.ToString("dddd, dd 'de' MMMM 'de' yyyy");
         CalcularPrecio();
     }
@@ -90,9 +90,9 @@ public partial class PrincipalViewModel : ObservableObject
         {
             var ticket = _dbServicio.CrearTicket(_empresa.Id, NumeroPrendas, PrecioPorPrenda, NumeroPercha);
             _impresionServicio.ImprimirTicket(ticket, config);
-            NumeroPercha = _dbServicio.ObtenerSiguienteNumeroTicket(_empresa.Id);
+            NumeroPercha = _dbServicio.ObtenerSiguienteNumeroPercha(_empresa.Id);
             NumeroPrendas = 1;
-            Mensaje = $"Percha #{ticket.NumeroTicket} impresa correctamente";
+            Mensaje = $"Percha #{ticket.NumeroPercha} impresa correctamente";
             HayError = false;
         }
         catch (Exception ex)
@@ -115,7 +115,7 @@ public partial class PrincipalViewModel : ObservableObject
     {
         var config = _dbServicio.ObtenerConfiguracion();
         PrecioPorPrenda = config.PrecioPorPrenda;
-        NumeroPercha = _dbServicio.ObtenerSiguienteNumeroTicket(_empresa.Id);
+        NumeroPercha = _dbServicio.ObtenerSiguienteNumeroPercha(_empresa.Id);
         CalcularPrecio();
     }
 }

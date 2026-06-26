@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Printing;
 using Guardarropa.Models;
 
@@ -67,27 +67,53 @@ public class ImpresionServicio
         var formatoCentrado = new StringFormat { Alignment = StringAlignment.Center };
         float y = area.Top;
 
-        var nombreEmpresa = ticket.Empresa?.Nombre ?? "Empresa";
-        g.DrawString(nombreEmpresa, fuenteTitulo, Brushes.Black,
-            new RectangleF(area.Left, y, area.Width, fuenteTitulo.GetHeight(g)), formatoCentrado);
-        y += fuenteTitulo.GetHeight(g) + 8;
+        void DibujarCentrado(string texto, Font fuente)
+        {
+            g.DrawString(texto, fuente, Brushes.Black,
+                new RectangleF(area.Left, y, area.Width, fuente.GetHeight(g)), formatoCentrado);
+            y += fuente.GetHeight(g);
+        }
 
-        g.DrawString(ticket.FechaHora.ToString("dd/MM/yyyy HH:mm"), fuenteNormal, Brushes.Black,
-            new RectangleF(area.Left, y, area.Width, fuenteNormal.GetHeight(g)), formatoCentrado);
-        y += fuenteNormal.GetHeight(g) + 4;
+        var empresa = ticket.Empresa;
+
+        // Cabecera: nombre de la empresa y direccion
+        DibujarCentrado(empresa?.Nombre ?? "Empresa", fuenteTitulo);
+        y += 4;
+
+        var lineaCalle = string.Join(" ", new[] { empresa?.Calle, empresa?.Numero }
+            .Where(s => !string.IsNullOrWhiteSpace(s)));
+        if (!string.IsNullOrWhiteSpace(lineaCalle))
+        {
+            DibujarCentrado(lineaCalle, fuenteNormal);
+            y += 2;
+        }
+
+        var lineaCiudad = string.Join(" ", new[] { empresa?.Ciudad, empresa?.Provincia }
+            .Where(s => !string.IsNullOrWhiteSpace(s)));
+        if (!string.IsNullOrWhiteSpace(lineaCiudad))
+        {
+            DibujarCentrado(lineaCiudad, fuenteNormal);
+            y += 2;
+        }
+
+        y += 4;
+        DibujarCentrado(ticket.FechaHora.ToString("dd/MM/yyyy HH:mm"), fuenteNormal);
+        y += 6;
 
         g.DrawLine(Pens.Black, area.Left, y, area.Right, y);
         y += 8;
 
-        var textoNumero = $"#{ticket.NumeroTicket}";
-        g.DrawString(textoNumero, fuenteGrande, Brushes.Black,
-            new RectangleF(area.Left, y, area.Width, fuenteGrande.GetHeight(g)), formatoCentrado);
-        y += fuenteGrande.GetHeight(g) + 8;
+        // Numero de percha (grande)
+        DibujarCentrado("Nº. Percha", fuenteNormal);
+        y += 2;
+        DibujarCentrado(ticket.NumeroPercha.ToString(), fuenteGrande);
+        y += 8;
 
         g.DrawLine(Pens.Black, area.Left, y, area.Right, y);
         y += 8;
 
-        g.DrawString($"Prendas: {ticket.NumeroPrendas}", fuenteNormal, Brushes.Black, area.Left, y);
+        // Detalle
+        g.DrawString($"Nº de prendas: {ticket.NumeroPrendas}", fuenteNormal, Brushes.Black, area.Left, y);
         y += fuenteNormal.GetHeight(g) + 4;
 
         g.DrawString($"Precio/prenda: {ticket.PrecioPorPrenda:C2}", fuenteNormal, Brushes.Black, area.Left, y);
@@ -96,9 +122,11 @@ public class ImpresionServicio
         g.DrawLine(Pens.Black, area.Left, y, area.Right, y);
         y += 8;
 
-        var textoTotal = $"TOTAL: {ticket.PrecioTotal:C2}";
-        g.DrawString(textoTotal, fuenteTitulo, Brushes.Black,
-            new RectangleF(area.Left, y, area.Width, fuenteTitulo.GetHeight(g)), formatoCentrado);
+        DibujarCentrado($"TOTAL: {ticket.PrecioTotal:C2}", fuenteTitulo);
+        y += 12;
+
+        // Numero de ticket (contador total)
+        g.DrawString($"Ticket Nº {ticket.NumeroTicket}", fuenteNormal, Brushes.Black, area.Left, y);
 
         fuenteNormal.Dispose();
         fuenteTitulo.Dispose();

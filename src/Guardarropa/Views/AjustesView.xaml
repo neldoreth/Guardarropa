@@ -19,7 +19,6 @@
 
                 <!-- Boton guardar fijo abajo -->
                 <StackPanel DockPanel.Dock="Bottom" Margin="0,20,0,0">
-                    <!-- Mensaje -->
                     <TextBlock Text="{Binding Mensaje}" FontSize="12"
                                HorizontalAlignment="Center" Margin="0,0,0,12"
                                TextWrapping="Wrap"
@@ -35,7 +34,6 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-
                     <Button Content="GUARDAR CAMBIOS" Command="{Binding GuardarConfiguracionCommand}"
                             FontSize="16" FontWeight="Bold" Padding="20,14"
                             Background="{DynamicResource ColorExito}" Foreground="White" BorderThickness="0"
@@ -85,139 +83,213 @@
 
                     <!-- ==================== TAB GENERAL ==================== -->
                     <TabItem Header="General">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,15,0,0">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,12,0,0">
                             <StackPanel>
-                                <!-- Tema -->
-                                <TextBlock Text="APARIENCIA" FontSize="13" FontWeight="Bold"
-                                           Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
-                                    <RadioButton Content="Tema oscuro" IsChecked="{Binding TemaOscuro}"
-                                                 Foreground="{DynamicResource TextoPrincipal}" FontSize="14"
-                                                 Margin="0,0,25,0" VerticalContentAlignment="Center"/>
-                                    <RadioButton Content="Tema claro" IsChecked="{Binding TemaClaro}"
-                                                 Foreground="{DynamicResource TextoPrincipal}" FontSize="14"
-                                                 VerticalContentAlignment="Center"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="PRECIO POR PRENDA" FontSize="13" FontWeight="Bold"
-                                           Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,6"/>
+                                <!-- Tema + Precio en una fila -->
                                 <Grid Margin="0,0,0,18">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="200"/>
-                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox Text="{Binding PrecioPorPrenda, UpdateSourceTrigger=PropertyChanged}"
-                                             FontSize="18" Padding="10" Background="{DynamicResource FondoInput}"
-                                             Foreground="{DynamicResource TextoPrincipal}"
-                                             BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"/>
-                                    <TextBlock Grid.Column="1" Text="EUR" FontSize="18" FontWeight="Bold"
-                                               Foreground="{DynamicResource TextoSecundario}"
-                                               VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="APARIENCIA" FontSize="13" FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton Content="Tema oscuro" IsChecked="{Binding TemaOscuro}"
+                                                         Foreground="{DynamicResource TextoPrincipal}" FontSize="14"
+                                                         Margin="0,0,20,0" VerticalContentAlignment="Center"/>
+                                            <RadioButton Content="Tema claro" IsChecked="{Binding TemaClaro}"
+                                                         Foreground="{DynamicResource TextoPrincipal}" FontSize="14"
+                                                         VerticalContentAlignment="Center"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="PRECIO POR PRENDA" FontSize="13" FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Text="{Binding PrecioPorPrenda, UpdateSourceTrigger=PropertyChanged}"
+                                                     FontSize="16" Padding="8" Width="150" Background="{DynamicResource FondoInput}"
+                                                     Foreground="{DynamicResource TextoPrincipal}"
+                                                     BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"/>
+                                            <TextBlock Text="EUR" FontSize="16" FontWeight="Bold"
+                                                       Foreground="{DynamicResource TextoSecundario}"
+                                                       VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
                                 </Grid>
 
                                 <!-- Empresas -->
                                 <TextBlock Text="EMPRESAS" FontSize="13" FontWeight="Bold"
-                                           Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,6"/>
-                                <ListBox ItemsSource="{Binding Empresas}"
-                                         SelectedItem="{Binding EmpresaSeleccionada}"
-                                         DisplayMemberPath="Nombre"
-                                         Background="{DynamicResource FondoInput}" Foreground="{DynamicResource TextoPrincipal}"
-                                         BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"
-                                         MaxHeight="100" Margin="0,0,0,8">
-                                    <ListBox.ItemContainerStyle>
-                                        <Style TargetType="ListBoxItem">
-                                            <Setter Property="Padding" Value="10,5"/>
-                                            <Setter Property="Foreground" Value="{DynamicResource TextoPrincipal}"/>
-                                        </Style>
-                                    </ListBox.ItemContainerStyle>
-                                </ListBox>
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Grid.Column="0" Text="{Binding NuevaEmpresa, UpdateSourceTrigger=PropertyChanged}"
-                                             FontSize="14" Padding="10" Background="{DynamicResource FondoInput}"
-                                             Foreground="{DynamicResource TextoPrincipal}"
-                                             BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1" Margin="0,0,8,0"/>
-                                    <Button Grid.Column="1" Content="Agregar" Command="{Binding AgregarEmpresaCommand}"
-                                            Background="{DynamicResource ColorExito}" Foreground="White" BorderThickness="0"
-                                            Cursor="Hand" Padding="18,10" FontSize="13" Margin="0,0,8,0">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}"
-                                                        CornerRadius="4" Padding="{TemplateBinding Padding}">
-                                                    <ContentPresenter HorizontalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
-                                    <Button Grid.Column="2" Content="Eliminar" Command="{Binding EliminarEmpresaCommand}"
-                                            Background="{DynamicResource ColorError}" Foreground="White" BorderThickness="0"
-                                            Cursor="Hand" Padding="18,10" FontSize="13">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}"
-                                                        CornerRadius="4" Padding="{TemplateBinding Padding}">
-                                                    <ContentPresenter HorizontalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
-                                </Grid>
-
-                                <Border BorderBrush="{DynamicResource BordeCampo}" BorderThickness="0,1,0,0" Margin="0,12,0,12"/>
-
-                                <!-- Contrasena Z -->
-                                <TextBlock Text="CONTRASENA Z" FontSize="13" FontWeight="Bold"
-                                           Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,6"/>
-                                <TextBox Text="{Binding ContrasenaZ, UpdateSourceTrigger=PropertyChanged}"
-                                         FontSize="18" FontWeight="Bold" Padding="10"
-                                         Background="{DynamicResource FondoInput}" Foreground="{DynamicResource ColorAccento}"
-                                         BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"
-                                         MaxWidth="300" HorizontalAlignment="Left" Margin="0,0,0,5"/>
-                                <TextBlock Text="Esta contrasena se necesita para realizar el cierre Z"
-                                           Foreground="{DynamicResource TextoTerciario}" FontSize="11" Margin="0,0,0,12"/>
-
-                                <Border BorderBrush="{DynamicResource BordeCampo}" BorderThickness="0,1,0,0" Margin="0,0,0,12"/>
-
-                                <!-- Cambiar contrasena maestra -->
-                                <TextBlock Text="CAMBIAR CONTRASENA MAESTRA" FontSize="13" FontWeight="Bold"
                                            Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ListBox Grid.Column="0" ItemsSource="{Binding Empresas}"
+                                             SelectedItem="{Binding EmpresaSeleccionada}"
+                                             DisplayMemberPath="Nombre"
+                                             Background="{DynamicResource FondoInput}" Foreground="{DynamicResource TextoPrincipal}"
+                                             BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"
+                                             MaxHeight="180" Margin="0,0,12,0">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="Padding" Value="10,5"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource TextoPrincipal}"/>
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                    </ListBox>
+
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="Nombre" Foreground="{DynamicResource TextoTerciario}" FontSize="11" Margin="0,0,0,3"/>
+                                        <TextBox Text="{Binding EmpresaNombre, UpdateSourceTrigger=PropertyChanged}"
+                                                 FontSize="14" Padding="8" Background="{DynamicResource FondoInput}"
+                                                 Foreground="{DynamicResource TextoPrincipal}"
+                                                 BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1" Margin="0,0,0,6"/>
+                                        <Grid Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                                <TextBlock Text="Calle" Foreground="{DynamicResource TextoTerciario}" FontSize="11" Margin="0,0,0,3"/>
+                                                <TextBox Text="{Binding EmpresaCalle, UpdateSourceTrigger=PropertyChanged}"
+                                                         FontSize="14" Padding="8" Background="{DynamicResource FondoInput}"
+                                                         Foreground="{DynamicResource TextoPrincipal}"
+                                                         BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="Numero" Foreground="{DynamicResource TextoTerciario}" FontSize="11" Margin="0,0,0,3"/>
+                                                <TextBox Text="{Binding EmpresaNumero, UpdateSourceTrigger=PropertyChanged}"
+                                                         FontSize="14" Padding="8" Background="{DynamicResource FondoInput}"
+                                                         Foreground="{DynamicResource TextoPrincipal}"
+                                                         BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                                <TextBlock Text="Ciudad" Foreground="{DynamicResource TextoTerciario}" FontSize="11" Margin="0,0,0,3"/>
+                                                <TextBox Text="{Binding EmpresaCiudad, UpdateSourceTrigger=PropertyChanged}"
+                                                         FontSize="14" Padding="8" Background="{DynamicResource FondoInput}"
+                                                         Foreground="{DynamicResource TextoPrincipal}"
+                                                         BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="Provincia" Foreground="{DynamicResource TextoTerciario}" FontSize="11" Margin="0,0,0,3"/>
+                                                <TextBox Text="{Binding EmpresaProvincia, UpdateSourceTrigger=PropertyChanged}"
+                                                         FontSize="14" Padding="8" Background="{DynamicResource FondoInput}"
+                                                         Foreground="{DynamicResource TextoPrincipal}"
+                                                         BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Nueva" Command="{Binding NuevaEmpresaCommand}"
+                                                    Background="{DynamicResource FondoInput}" Foreground="{DynamicResource TextoPrincipal}"
+                                                    BorderThickness="0" Cursor="Hand" Padding="16,8" FontSize="13" Margin="0,0,8,0">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}" CornerRadius="4"
+                                                                Padding="{TemplateBinding Padding}"
+                                                                BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1">
+                                                            <ContentPresenter HorizontalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                            <Button Content="Guardar empresa" Command="{Binding GuardarEmpresaCommand}"
+                                                    Background="{DynamicResource ColorExito}" Foreground="White" BorderThickness="0"
+                                                    Cursor="Hand" Padding="16,8" FontSize="13" Margin="0,0,8,0">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter HorizontalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                            <Button Content="Eliminar" Command="{Binding EliminarEmpresaCommand}"
+                                                    Background="{DynamicResource ColorError}" Foreground="White" BorderThickness="0"
+                                                    Cursor="Hand" Padding="16,8" FontSize="13">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter HorizontalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
+
+                    <!-- ==================== TAB CONTRASENA ==================== -->
+                    <TabItem Header="Contrasena">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,20,0,0">
+                            <StackPanel>
+                                <!-- Contrasena Z -->
+                                <TextBlock Text="CONTRASENA Z" FontSize="13" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>
+                                <TextBox Text="{Binding ContrasenaZ, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="20" FontWeight="Bold" Padding="12" MaxWidth="300"
+                                         HorizontalAlignment="Left"
+                                         Background="{DynamicResource FondoInput}" Foreground="{DynamicResource ColorAccento}"
+                                         BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1" Margin="0,0,0,6"/>
+                                <TextBlock Text="Necesaria para realizar el cierre Z"
+                                           Foreground="{DynamicResource TextoTerciario}" FontSize="12" Margin="0,0,0,30"/>
+
+                                <Border BorderBrush="{DynamicResource BordeCampo}" BorderThickness="0,1,0,0" Margin="0,0,0,25"/>
+
+                                <!-- Cambiar contrasena maestra -->
+                                <TextBlock Text="CAMBIAR CONTRASENA MAESTRA" FontSize="13" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,16"/>
+                                <Grid MaxWidth="700" HorizontalAlignment="Left">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                        <TextBlock Text="Actual:" Foreground="{DynamicResource TextoSecundario}" FontSize="11" Margin="0,0,0,4"/>
-                                        <PasswordBox x:Name="TxtContrasenaActual" Padding="10" Background="{DynamicResource FondoInput}"
+                                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                                        <TextBlock Text="Contrasena actual" Foreground="{DynamicResource TextoSecundario}"
+                                                   FontSize="12" Margin="0,0,0,6"/>
+                                        <PasswordBox x:Name="TxtContrasenaActual" Padding="10" FontSize="14"
+                                                     Background="{DynamicResource FondoInput}"
                                                      Foreground="{DynamicResource TextoPrincipal}"
                                                      BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"
                                                      PasswordChanged="TxtContrasenaActual_Changed"/>
                                     </StackPanel>
-                                    <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                                        <TextBlock Text="Nueva:" Foreground="{DynamicResource TextoSecundario}" FontSize="11" Margin="0,0,0,4"/>
-                                        <PasswordBox x:Name="TxtNuevaContrasena" Padding="10" Background="{DynamicResource FondoInput}"
+                                    <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                                        <TextBlock Text="Nueva contrasena" Foreground="{DynamicResource TextoSecundario}"
+                                                   FontSize="12" Margin="0,0,0,6"/>
+                                        <PasswordBox x:Name="TxtNuevaContrasena" Padding="10" FontSize="14"
+                                                     Background="{DynamicResource FondoInput}"
                                                      Foreground="{DynamicResource TextoPrincipal}"
                                                      BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"
                                                      PasswordChanged="TxtNuevaContrasena_Changed"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
-                                        <TextBlock Text="Confirmar:" Foreground="{DynamicResource TextoSecundario}" FontSize="11" Margin="0,0,0,4"/>
-                                        <PasswordBox x:Name="TxtConfirmarNueva" Padding="10" Background="{DynamicResource FondoInput}"
+                                        <TextBlock Text="Confirmar nueva" Foreground="{DynamicResource TextoSecundario}"
+                                                   FontSize="12" Margin="0,0,0,6"/>
+                                        <PasswordBox x:Name="TxtConfirmarNueva" Padding="10" FontSize="14"
+                                                     Background="{DynamicResource FondoInput}"
                                                      Foreground="{DynamicResource TextoPrincipal}"
                                                      BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"
                                                      PasswordChanged="TxtConfirmarNueva_Changed"/>
                                     </StackPanel>
                                 </Grid>
-                                <Button Content="Cambiar contrasena" Command="{Binding CambiarContrasenaCommand}"
+                                <Button Content="Cambiar contrasena maestra" Command="{Binding CambiarContrasenaCommand}"
                                         Background="{DynamicResource FondoInput}" Foreground="{DynamicResource TextoPrincipal}"
                                         BorderThickness="1" Cursor="Hand" Padding="18,10" FontSize="13"
-                                        HorizontalAlignment="Left" Margin="0,10,0,12">
+                                        HorizontalAlignment="Left" Margin="0,16,0,0">
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
                                             <Border Background="{TemplateBinding Background}"
@@ -228,14 +300,58 @@
                                         </ControlTemplate>
                                     </Button.Template>
                                 </Button>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
 
-                                <Border BorderBrush="{DynamicResource BordeCampo}" BorderThickness="0,1,0,0" Margin="0,0,0,12"/>
+                    <!-- ==================== TAB CIERRE Z ==================== -->
+                    <TabItem Header="Cierre Z">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,20,0,0">
+                            <StackPanel>
+                                <!-- Contador total de tickets -->
+                                <TextBlock Text="CONTADOR TOTAL DE TICKETS" FontSize="13" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>
+                                <TextBlock Foreground="{DynamicResource TextoTerciario}" FontSize="12" Margin="0,0,0,16"
+                                           TextWrapping="Wrap">
+                                    Numero acumulado de tickets emitidos en toda la historia de la aplicacion.
+                                    No se reinicia con el cierre Z, solo manualmente.
+                                </TextBlock>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,30">
+                                    <Border Background="{DynamicResource FondoInput}" CornerRadius="6"
+                                            Padding="20,12" VerticalAlignment="Center" Margin="0,0,20,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Tickets emitidos: " FontSize="16"
+                                                       Foreground="{DynamicResource TextoSecundario}" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding ContadorTickets}" FontSize="28" FontWeight="Bold"
+                                                       Foreground="{DynamicResource ColorAccento}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Button Content="Reiniciar contador" Command="{Binding ReiniciarContadorTicketsCommand}"
+                                            Background="{DynamicResource ColorError}" Foreground="White" BorderThickness="0"
+                                            Cursor="Hand" Padding="18,12" FontSize="13" VerticalAlignment="Center">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </StackPanel>
+
+                                <Border BorderBrush="{DynamicResource BordeCampo}" BorderThickness="0,1,0,0" Margin="0,0,0,25"/>
 
                                 <!-- Historico -->
+                                <TextBlock Text="HISTORICO DE CIERRES Z" FontSize="13" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>
+                                <TextBlock Foreground="{DynamicResource TextoTerciario}" FontSize="12" Margin="0,0,0,16">
+                                    Consulta todos los cierres realizados con fecha, perchas emitidas y recaudacion.
+                                </TextBlock>
                                 <Button Content="Ver historico de cierres Z" Command="{Binding AbrirHistoricoCommand}"
                                         Background="{DynamicResource FondoInput}" Foreground="{DynamicResource TextoPrincipal}"
-                                        BorderThickness="0" Cursor="Hand" Padding="18,12" FontSize="14"
-                                        HorizontalAlignment="Stretch">
+                                        BorderThickness="0" Cursor="Hand" Padding="20,14" FontSize="15"
+                                        HorizontalAlignment="Left">
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
                                             <Border Background="{TemplateBinding Background}"
@@ -254,7 +370,6 @@
                     <TabItem Header="Impresora">
                         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,20,0,0">
                             <StackPanel>
-                                <!-- Seleccion impresora -->
                                 <TextBlock Text="IMPRESORA" FontSize="13" FontWeight="Bold"
                                            Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>
                                 <ComboBox ItemsSource="{Binding ImpresorasDisponibles}"
@@ -263,7 +378,6 @@
                                           Foreground="{DynamicResource TextoPrincipal}"
                                           BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1" Margin="0,0,0,25"/>
 
-                                <!-- Dimensiones -->
                                 <TextBlock Text="DIMENSIONES DEL TICKET" FontSize="13" FontWeight="Bold"
                                            Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,10"/>
                                 <Grid Margin="0,0,0,25">
@@ -285,7 +399,6 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <!-- Margenes -->
                                 <TextBlock Text="MARGENES (mm)" FontSize="13" FontWeight="Bold"
                                            Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,10"/>
                                 <Grid Margin="0,0,0,25">
@@ -321,7 +434,6 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <!-- Tamanos de texto -->
                                 <TextBlock Text="TAMANO DE TEXTOS (pt)" FontSize="13" FontWeight="Bold"
                                            Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,10"/>
                                 <Grid Margin="0,0,0,10">

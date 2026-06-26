@@ -3,17 +3,26 @@
 ## Descripcion
 
 Aplicacion de escritorio para Windows para gestionar un servicio de guardarropa (coat check).
-Permite gestionar tickets de prendas, configurar empresas, precios, impresoras de tickets,
-y llevar un historico de cierres diarios (Z).
+Permite emitir tickets de prendas (perchas), configurar empresas, precios e impresoras de
+tickets, y llevar un historico de cierres diarios (Z).
 
 ## Stack Tecnologico
 
-- **Framework**: WPF (.NET 8)
+- **Framework**: WPF (.NET 8, `net8.0-windows`)
 - **Lenguaje**: C#
-- **Base de datos**: SQLite (via Entity Framework Core)
-- **UI**: Material Design con MaterialDesignInXAML
-- **Impresion**: System.Drawing.Printing (impresoras de tickets/recibos)
-- **PDF**: QuestPDF para exportacion de informes
+- **MVVM**: CommunityToolkit.Mvvm (`[ObservableProperty]`, `[RelayCommand]`, `ObservableObject`)
+- **Base de datos**: SQLite via Entity Framework Core 8 (`Microsoft.EntityFrameworkCore.Sqlite`)
+- **Impresion**: System.Drawing.Common / System.Drawing.Printing (impresoras de tickets/recibos)
+- **Cultura**: `es-ES` (moneda en euros, fechas en espanol)
+- **Temas**: claro / oscuro mediante `ResourceDictionary` intercambiable en tiempo de ejecucion
+
+## Almacenamiento de datos
+
+- La base de datos SQLite se crea en: `%LOCALAPPDATA%\Guardarropa\guardarropa.db`
+- Se usa `EnsureCreated()` (NO hay migraciones). Si cambia el esquema de los modelos,
+  hay que borrar el `.db` para que se vuelva a crear:
+  `Remove-Item "$env:LOCALAPPDATA\Guardarropa\guardarropa.db"`
+- Tablas: `Configuraciones`, `Empresas`, `Tickets`, `CierresZ`
 
 ## Estructura del Proyecto
 
@@ -21,72 +30,86 @@ y llevar un historico de cierres diarios (Z).
 guardarropa/
   src/
     Guardarropa/              # Proyecto principal WPF
-      Models/                 # Modelos de datos
+      Models/                 # Modelos de datos (Empresa, Ticket, Configuracion, CierreZ)
       ViewModels/             # ViewModels (MVVM)
-      Views/                  # Ventanas y controles XAML
-      Services/               # Logica de negocio (impresion, BD, etc.)
-      Data/                   # DbContext y migraciones EF Core
-      Assets/                 # Recursos (iconos, fuentes)
-      App.xaml                # Punto de entrada
-  tests/
-    Guardarropa.Tests/        # Tests unitarios
+      Views/                  # Ventanas y controles XAML (+ code-behind)
+      Services/               # Logica de negocio (BaseDatosServicio, ImpresionServicio)
+      Data/                   # GuardarropaDbContext (EF Core)
+      Assets/                 # TemaClaro.xaml / TemaOscuro.xaml (recursos de tema)
+      App.xaml                # Punto de entrada, cultura y tema
+      MainWindow.xaml         # Ventana host; intercambia UserControls
 ```
+
+## Conceptos clave: Percha vs. Ticket
+
+Son dos contadores DISTINTOS:
+
+- **Numero de percha**: numero visible y editable en la pantalla principal. Se reinicia a 1
+  con cada cierre Z (por empresa). Es el numero que identifica la prenda entregada.
+- **Numero de ticket (contador total)**: contador global acumulado que NO se reinicia con la Z.
+  Solo se puede poner a cero manualmente desde Ajustes, con confirmacion (accion irreversible).
+  Se guarda en `Configuracion.ContadorTickets`.
 
 ## Flujo Principal
 
-1. **Primer inicio**: Pedir contrasena maestra (no hay datos previos)
-2. **Inicio normal**: Seleccionar empresa -> Pantalla principal
-3. **Pantalla principal**: Introducir numero de prendas -> Imprimir ticket
-4. **Ticket**: Nombre empresa, fecha/hora, numero de ticket (centrado, grande), precio total
-5. **Cierre Z**: Requiere contrasena especifica, resetea contador de tickets, genera informe
+1. **Primer inicio**: se establece la contrasena maestra (no hay datos previos).
+2. **Inicio normal**: seleccionar empresa -> pantalla principal.
+3. **Pantalla principal**: numero de percha (editable) + numero de prendas (+/-) -> total
+   calculado -> boton grande "IMPRIMIR PERCHA". La tecla Intro tambien imprime (el foco
+   siempre esta en el TextBox de percha para garantizarlo). Se muestra la fecha actual.
+4. **Cierre Z**: requiere la contrasena Z, reinicia el contador de perchas y genera un
+   informe imprimible (perchas emitidas, prendas, dinero recaudado).
+
+## Ticket impreso (de arriba a abajo)
+
+1. Nombre de la empresa
+2. Calle + numero
+3. Ciudad + provincia
+4. Fecha / hora
+5. "Nº. Percha" + el numero de percha (en grande)
+6. Nº de prendas y precio por prenda
+7. TOTAL en euros
+8. Numero de ticket (contador total)
 
 ## Funcionalidades
 
 ### Empresas
-- CRUD de empresas desde ajustes
-- Seleccion de empresa al iniciar
+- CRUD desde Ajustes (alta, edicion y baja logica via `Activa`).
+- Campos: nombre, calle, numero, ciudad, provincia.
+- Seleccion de empresa al iniciar la aplicacion.
 
-### Tickets
-- Numero de prendas por ticket
-- Precio = precio_por_prenda * numero_prendas
-- Numero de ticket autoincremental (se resetea con la Z)
-- Impresion en impresora de tickets
+### Configuracion (protegida por contrasena maestra)
+Organizada en 4 pestanas. "GUARDAR CAMBIOS" guarda y cierra la vista.
 
-### Configuracion (protegida por contrasena)
-- Contrasena maestra (se establece en primer inicio, modificable despues)
-- Precio por prenda
-- Empresas
-- Impresora: seleccion de impresora, anchura, longitud, margenes, tamano de textos
-- Generar contrasena para sacar la Z
-- Historico de cierres Z (fecha, tickets emitidos, dinero recaudado)
+- **General**: tema claro/oscuro (tiempo real), precio por prenda, CRUD de empresas (con direccion).
+- **Contrasena**: contrasena Z (editable), cambiar contrasena maestra.
+- **Cierre Z**: contador total de tickets (con boton de reinicio irreversible), acceso al historico.
+- **Impresora**: seleccion de impresora, ancho/alto (mm), margenes (mm), tamanos de texto.
 
 ### Cierre Z
-- Requiere contrasena generada desde ajustes
-- Pone contadores a 0
-- Genera listado (ticket o PDF): tickets del dia, dinero recaudado
+- Requiere la contrasena Z.
+- Reinicia el contador de perchas (no el contador total de tickets).
+- Genera informe imprimible: perchas, prendas y dinero recaudado.
 
 ## Comandos
 
-```bash
+```powershell
+# IMPORTANTE: las herramientas no estan en PATH por defecto en este equipo
+$env:PATH = "C:\Program Files\dotnet;C:\Program Files\Git\cmd;C:\Program Files\GitHub CLI;$env:PATH"
+
 # Compilar
 dotnet build src/Guardarropa/Guardarropa.csproj
 
 # Ejecutar
 dotnet run --project src/Guardarropa/Guardarropa.csproj
-
-# Tests
-dotnet test tests/Guardarropa.Tests/Guardarropa.Tests.csproj
-
-# Publicar (release)
-dotnet publish src/Guardarropa/Guardarropa.csproj -c Release -r win-x64 --self-contained
 ```
 
 ## Convenciones
 
-- Patron MVVM estricto
-- Nombres de clases y metodos en PascalCase
-- Nombres de variables locales en camelCase
-- Nombres de campos privados con prefijo _
-- Idioma del codigo (variables, clases, metodos): espanol
-- Idioma de la UI: espanol
-- Commits en espanol
+- Patron MVVM.
+- Clases y metodos en PascalCase; variables locales en camelCase; campos privados con prefijo `_`.
+- Idioma del codigo (variables, clases, metodos): espanol (sin acentos en identificadores).
+- Idioma de la UI: espanol.
+- Commits en espanol.
+- Los archivos `.cs` con caracteres no ASCII (p. ej. `º` en `ImpresionServicio.cs`) se guardan
+  en UTF-8 con BOM para que el compilador los lea correctamente.
