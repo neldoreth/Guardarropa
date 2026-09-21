@@ -25,6 +25,10 @@ x86/
 *.exe
 *.pdb
 
+## Publicacion / instalador
+publish/
+installer/output/
+
 ## SQLite
 *.db
 *.db-shm

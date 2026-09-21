@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -75,6 +76,9 @@ public partial class AjustesViewModel : ObservableObject
     // --- Contador total de tickets ---
     [ObservableProperty] private int _contadorTickets;
 
+    // --- Diario de tickets ---
+    [ObservableProperty] private string _rutaDiario = string.Empty;
+
     // --- Contrasena ---
     [ObservableProperty] private string _contrasenaActual = string.Empty;
     [ObservableProperty] private string _nuevaContrasena = string.Empty;
@@ -95,6 +99,7 @@ public partial class AjustesViewModel : ObservableObject
         CargarConfiguracion();
         CargarEmpresas();
         CargarImpresoras();
+        RutaDiario = DiarioServicio.ObtenerCarpetaDiario();
     }
 
     private void CargarConfiguracion()
@@ -262,6 +267,12 @@ public partial class AjustesViewModel : ObservableObject
     private void AbrirHistorico()
     {
         _onAbrirHistorico();
+    }
+
+    [RelayCommand]
+    private void AbrirCarpetaDiario()
+    {
+        Process.Start(new ProcessStartInfo(RutaDiario) { UseShellExecute = true });
     }
 
     [RelayCommand]

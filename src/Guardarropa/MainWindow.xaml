@@ -4,6 +4,7 @@
         Title="Guardarropa" Height="850" Width="950"
         MinHeight="750" MinWidth="750"
         WindowStartupLocation="CenterScreen"
+        Icon="Assets/icono.ico"
         Background="#1a1a2e">
     <Grid>
         <ContentControl x:Name="ContenidoPrincipal"/>

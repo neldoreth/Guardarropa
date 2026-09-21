@@ -4,7 +4,9 @@
       "PowerShell(git *)",
       "PowerShell(winget install *)",
       "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\GitHub CLI\\\\gh.exe\" auth status)",
-      "PowerShell(Get-Process *)"
+      "PowerShell(Get-Process *)",
+      "Skill(run)",
+      "PowerShell($env:PATH = \"C:\\\\Program Files\\\\dotnet;C:\\\\Program Files\\\\Git\\\\cmd;C:\\\\Program Files\\\\GitHub CLI;$env:PATH\"; Start-Process -FilePath \"dotnet\" -ArgumentList \"run --project src/Guardarropa/Guardarropa.csproj\" -WorkingDirectory \"D:\\\\code\\\\guardarropa\" -WindowStyle Normal)"
     ]
   }
 }

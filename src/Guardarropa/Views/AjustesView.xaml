@@ -342,6 +342,36 @@
 
                                 <Border BorderBrush="{DynamicResource BordeCampo}" BorderThickness="0,1,0,0" Margin="0,0,0,25"/>
 
+                                <!-- Diario de tickets -->
+                                <TextBlock Text="DIARIO DE TICKETS" FontSize="13" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>
+                                <TextBlock Foreground="{DynamicResource TextoTerciario}" FontSize="12" Margin="0,0,0,10"
+                                           TextWrapping="Wrap">
+                                    Cada percha impresa se apunta en un archivo de texto diario por empresa
+                                    (uno por dia, con hora, numero de percha, prendas y total, y una linea final
+                                    con la suma del dia). Se guardan en:
+                                </TextBlock>
+                                <TextBox Text="{Binding RutaDiario, Mode=OneWay}" IsReadOnly="True"
+                                         FontSize="12" Padding="10" Margin="0,0,0,14"
+                                         Background="{DynamicResource FondoInput}" Foreground="{DynamicResource TextoPrincipal}"
+                                         BorderBrush="{DynamicResource BordeCampo}" BorderThickness="1"/>
+                                <Button Content="Abrir carpeta del diario" Command="{Binding AbrirCarpetaDiarioCommand}"
+                                        Background="{DynamicResource FondoInput}" Foreground="{DynamicResource TextoPrincipal}"
+                                        BorderThickness="0" Cursor="Hand" Padding="20,14" FontSize="15"
+                                        HorizontalAlignment="Left" Margin="0,0,0,25">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="6" Padding="{TemplateBinding Padding}"
+                                                    BorderBrush="{DynamicResource ColorAccento}" BorderThickness="1">
+                                                <ContentPresenter HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <Border BorderBrush="{DynamicResource BordeCampo}" BorderThickness="0,1,0,0" Margin="0,0,0,25"/>
+
                                 <!-- Historico -->
                                 <TextBlock Text="HISTORICO DE CIERRES Z" FontSize="13" FontWeight="Bold"
                                            Foreground="{DynamicResource TextoSecundario}" Margin="0,0,0,8"/>

@@ -28,14 +28,20 @@ tickets, y llevar un historico de cierres diarios (Z).
 
 ```
 guardarropa/
+  installer/                 # Instalador Windows (Inno Setup)
+    Guardarropa.iss          # Script del instalador (Setup.exe)
+    build.ps1                # Publica la app y compila el instalador en un paso
+    output/                  # Setup.exe generado (no versionado)
   src/
     Guardarropa/              # Proyecto principal WPF
       Models/                 # Modelos de datos (Empresa, Ticket, Configuracion, CierreZ)
       ViewModels/             # ViewModels (MVVM)
       Views/                  # Ventanas y controles XAML (+ code-behind)
-      Services/               # Logica de negocio (BaseDatosServicio, ImpresionServicio)
+      Services/               # Logica de negocio (BaseDatosServicio, ImpresionServicio,
+                               #   DiarioServicio para el diario de tickets en .txt)
       Data/                   # GuardarropaDbContext (EF Core)
-      Assets/                 # TemaClaro.xaml / TemaOscuro.xaml (recursos de tema)
+      Assets/                 # TemaClaro.xaml / TemaOscuro.xaml (recursos de tema) e icono.ico
+      AppInfo.cs              # Nombre, version y changelog del programa (ventana Acerca de)
       App.xaml                # Punto de entrada, cultura y tema
       MainWindow.xaml         # Ventana host; intercambia UserControls
 ```
@@ -85,11 +91,30 @@ Organizada en 4 pestanas. "GUARDAR CAMBIOS" guarda y cierra la vista.
 - **Contrasena**: contrasena Z (editable), cambiar contrasena maestra.
 - **Cierre Z**: contador total de tickets (con boton de reinicio irreversible), acceso al historico.
 - **Impresora**: seleccion de impresora, ancho/alto (mm), margenes (mm), tamanos de texto.
+- Ademas hay un boton "Abrir carpeta del diario" (ver Diario de tickets, abajo).
 
 ### Cierre Z
 - Requiere la contrasena Z.
 - Reinicia el contador de perchas (no el contador total de tickets).
 - Genera informe imprimible: perchas, prendas y dinero recaudado.
+
+### Diario de tickets
+- Cada percha impresa se registra automaticamente (`DiarioServicio`) en un archivo `.txt`
+  diario por empresa, guardado en `%LOCALAPPDATA%\Guardarropa\diario\`.
+- Cada linea tiene hora, numero de percha, prendas y total; la ultima linea del dia
+  acumula el total de perchas, prendas y dinero.
+
+### Restablecimiento de contrasena maestra
+- Si en la carpeta del ejecutable existe un `reset.txt` con la linea `password=reset`,
+  al iniciar la app se muestra la pantalla de restablecimiento en vez del login normal.
+- Al guardar la nueva contrasena se borra `reset.txt` automaticamente.
+
+### Acerca de
+- Abajo a la derecha de la pantalla principal se muestra el numero de version (`AppInfo.Version`).
+- Al hacer clic se abre una ventana "Acerca de" con el nombre del programa, el desarrollador
+  (ClickEZ Solutions) y el historial de cambios (`AppInfo.Historial`).
+- Al publicar una nueva version hay que actualizar `AppInfo.Version`/`AppInfo.Historial`
+  Y `MyAppVersion` en `installer/Guardarropa.iss` (no estan sincronizados automaticamente).
 
 ## Comandos
 
@@ -102,7 +127,22 @@ dotnet build src/Guardarropa/Guardarropa.csproj
 
 # Ejecutar
 dotnet run --project src/Guardarropa/Guardarropa.csproj
+
+# Generar el instalador Windows (Setup.exe autocontenido, requiere Inno Setup 6)
+powershell -File installer/build.ps1
 ```
+
+## Instalador (Windows)
+
+- `installer/build.ps1` publica la app como `.exe` self-contained (win-x64, single-file,
+  no requiere .NET instalado en el equipo destino) y compila `installer/Guardarropa.iss`
+  con Inno Setup 6 (`%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe`).
+- El resultado es `installer/output/Guardarropa-Setup-<version>.exe`: instala en
+  `%LOCALAPPDATA%\Programs\Guardarropa` (sin necesitar permisos de administrador),
+  crea accesos directos en el menu inicio y (opcional) en el escritorio, e incluye
+  desinstalador.
+- Recordar mantener sincronizada la version entre `AppInfo.Version` (C#) y
+  `MyAppVersion` (`installer/Guardarropa.iss`).
 
 ## Convenciones
 

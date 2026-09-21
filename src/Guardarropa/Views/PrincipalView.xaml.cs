@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Guardarropa.ViewModels;
+using Guardarropa;
 
 namespace Guardarropa.Views;
 
@@ -14,7 +15,14 @@ public partial class PrincipalView : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
+        BtnVersion.Content = $"v{AppInfo.Version}";
         TxtNumeroPercha.Focus();
+    }
+
+    private void BtnVersion_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new AcercaDeDialog { Owner = Window.GetWindow(this) };
+        dialog.ShowDialog();
     }
 
     private void Grid_MouseDown(object sender, MouseButtonEventArgs e)

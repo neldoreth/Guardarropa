@@ -151,5 +151,18 @@
                 </StackPanel>
             </Border>
         </Grid>
+
+        <Button Grid.Row="1" x:Name="BtnVersion" Click="BtnVersion_Click"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,15"
+                Background="Transparent" Foreground="{DynamicResource TextoSecundario}" BorderThickness="0"
+                Cursor="Hand" FontSize="11" Padding="4">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
     </Grid>
 </UserControl>

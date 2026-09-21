@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Guardarropa.Data;
 using Guardarropa.Models;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,6 +9,8 @@ namespace Guardarropa.Services;
 
 public class BaseDatosServicio
 {
+    private readonly DiarioServicio _diarioServicio = new();
+
     public void InicializarBaseDatos()
     {
         using var db = new GuardarropaDbContext();
@@ -86,6 +89,29 @@ public class BaseDatosServicio
             config.ContrasenaMaestra = HashContrasena(nuevaContrasena);
             db.SaveChanges();
         }
+    }
+
+    // --- Restablecimiento de contrasena via reset.txt ---
+
+    private static string RutaArchivoReset =>
+        Path.Combine(AppContext.BaseDirectory, "reset.txt");
+
+    public bool HaySolicitudDeReset()
+    {
+        var ruta = RutaArchivoReset;
+        if (!File.Exists(ruta)) return false;
+
+        var contenido = File.ReadAllText(ruta);
+        return contenido
+            .Split('\n')
+            .Any(linea => linea.Trim().Equals("password=reset", StringComparison.OrdinalIgnoreCase));
+    }
+
+    public void EliminarArchivoReset()
+    {
+        var ruta = RutaArchivoReset;
+        if (File.Exists(ruta))
+            File.Delete(ruta);
     }
 
     public string GenerarContrasenaZ()
@@ -200,6 +226,7 @@ public class BaseDatosServicio
         db.SaveChanges();
 
         ticket.Empresa = db.Empresas.Find(empresaId);
+        _diarioServicio.RegistrarTicket(ticket);
         return ticket;
     }
 

@@ -25,6 +25,8 @@ public partial class MainWindow : Window
     {
         if (_dbServicio.EsPrimerInicio())
             MostrarPrimerInicio();
+        else if (_dbServicio.HaySolicitudDeReset())
+            MostrarRestablecerContrasena();
         else
             MostrarSeleccionEmpresa();
     }
@@ -32,6 +34,13 @@ public partial class MainWindow : Window
     private void MostrarPrimerInicio()
     {
         var vm = new PrimerInicioViewModel(_dbServicio, () => MostrarSeleccionEmpresa());
+        var view = new PrimerInicioView { DataContext = vm };
+        ContenidoPrincipal.Content = view;
+    }
+
+    private void MostrarRestablecerContrasena()
+    {
+        var vm = new PrimerInicioViewModel(_dbServicio, () => MostrarSeleccionEmpresa(), esRestablecimiento: true);
         var view = new PrimerInicioView { DataContext = vm };
         ContenidoPrincipal.Content = view;
     }

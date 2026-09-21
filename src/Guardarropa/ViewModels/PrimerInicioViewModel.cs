@@ -8,6 +8,7 @@ public partial class PrimerInicioViewModel : ObservableObject
 {
     private readonly BaseDatosServicio _dbServicio;
     private readonly Action _onCompletado;
+    private readonly bool _esRestablecimiento;
 
     [ObservableProperty]
     private string _contrasena = string.Empty;
@@ -18,10 +19,19 @@ public partial class PrimerInicioViewModel : ObservableObject
     [ObservableProperty]
     private string _error = string.Empty;
 
-    public PrimerInicioViewModel(BaseDatosServicio dbServicio, Action onCompletado)
+    public string Titulo => _esRestablecimiento ? "Restablecer contrasena" : "Configuracion inicial";
+
+    public string Subtitulo => _esRestablecimiento
+        ? "Se detecto una solicitud de restablecimiento (reset.txt). Establece una nueva contrasena maestra."
+        : "Establece tu contrasena maestra";
+
+    public string TextoBoton => _esRestablecimiento ? "GUARDAR NUEVA CONTRASENA" : "CREAR CONTRASENA";
+
+    public PrimerInicioViewModel(BaseDatosServicio dbServicio, Action onCompletado, bool esRestablecimiento = false)
     {
         _dbServicio = dbServicio;
         _onCompletado = onCompletado;
+        _esRestablecimiento = esRestablecimiento;
     }
 
     [RelayCommand]
@@ -43,7 +53,15 @@ public partial class PrimerInicioViewModel : ObservableObject
             return;
         }
 
-        _dbServicio.CrearConfiguracionInicial(Contrasena);
+        if (_esRestablecimiento)
+        {
+            _dbServicio.CambiarContrasenaMaestra(Contrasena);
+            _dbServicio.EliminarArchivoReset();
+        }
+        else
+        {
+            _dbServicio.CrearConfiguracionInicial(Contrasena);
+        }
         _onCompletado();
     }
 }
